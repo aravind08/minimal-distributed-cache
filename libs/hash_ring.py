@@ -4,9 +4,9 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class ConsistentHashing(object):
+class HashRing(object):
     """
-    Implements consistent hashing
+    Implements consistent hashing and helper functions
     """
     def __init__(self, nodes):
         """

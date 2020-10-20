@@ -9,7 +9,7 @@ import time
 from libs.config import CONFIG
 from libs import utils
 from libs.hash_node import HashNode
-from libs.consistent_hashing import ConsistentHashing
+from libs.hash_ring import HashRing
 
 # configure the main logger to print to sdtout
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
@@ -30,7 +30,7 @@ class Server(object):
     """
     def __init__(self, host='localhost', port=6600):
         # initialize the hash ring
-        self.ring = ConsistentHashing(CONFIG["SERVER_POOL"])
+        self.ring = HashRing(CONFIG["SERVER_POOL"])
         # start the cache servers
         self._server_threads = {}
         self.start_cache_servers()
