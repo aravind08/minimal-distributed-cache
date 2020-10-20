@@ -1,41 +1,44 @@
-# Minimal Distributed Cache 
+# Distributed Cache Instance
 
-Pure python implementation of the distributed cache using the consistent hashing technique.
+Python implementation of **In-Memory LRU Cache Server** running as a cluster and a client to access them individually.
+
+## Goals Met
+ - [x] Users should be able to connect to the database over the network.
+ - [x] Users should be able to GET/SET a key.
+ - [x] Users should be able to EXPIRE (auto-delete after a given duration) a key.
+ - [x] Since the database will be distributed, users should be able to connect to any node to SET a key, and connect to any other node to GET the key.
+ - [x] Multiple users should be able to concurrently use the database.
+ - [x] The database should be fully functional even if one node goes down.
+
+## Architecture & Implementation
+
+![alt text](https://i.ibb.co/mtH1f5P/Screenshot-2020-10-21-at-3-53-51-AM.png)
+
+
+#### 1. Cache DB Servers:
+ - Individual LRU Cache with a socket server
+ - Snapshots DB to local file at regular intervals
+ - Data recovery on restart
+#### 2. Client:
+ - Connect to cache DB nodes using ID and helper functions
+ 
 
 ## Usage
 
-start the server using `python server.py` under a python3 env.
+start the server using `python server.py` under a python3 env. Use client class to access the cluster as shown.
 
 ```python3
-from gevent import socket
-from gevent import monkey
-monkey.patch_all()
+from client import Client
 
-host, port = ('localhost', 6600)
-conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-conn.connect((host, int(port), ))
-
-conn.send(bytes("SET A 123", "utf-8"))
-data = conn.recv(1024)
-print(data.decode("utf-8"))
-
-conn.send(bytes("SET B ANACONDA", "utf-8"))
-data = conn.recv(1024)
-print(data.decode("utf-8"))
-
-conn.send(bytes("GET A", "utf-8"))
-data = conn.recv(1024)
-print(data.decode("utf-8"))
-
-conn.send(bytes("GET B", "utf-8"))
-data = conn.recv(1024)
-print(data.decode("utf-8"))
-
-conn.send(bytes("EXPIRE B 10", "utf-8"))
-data = conn.recv(1024)
-print(data.decode("utf-8"))
-
-conn.close()
+client = Client()
+client.connect("n1")
+res = client.set("A", 123)
+print(res)
+res = client.get("A")
+print(res)
+res = client.expire("A", 10)
+print(res)
+client.close()
 ```
 
 ## License
