@@ -4,8 +4,12 @@ CONFIG = {
     # at least 3 nodes as per problem statement
     'APPLICATION_SERVER_IP': 'localhost',
     'APPLICATION_SERVER_PORT': 6600,
-    'SERVER_POOL': [('127.0.0.1:30008', 3), ('127.0.0.1:30009', 3), ('127.0.0.1:30010', 3)],
-    'HEALTH_THRESHOLD': 5,
+    'SERVER_POOL': {
+        'n1': ('127.0.0.1', 30008), 
+        'n2': ('127.0.0.1', 30009), 
+        'n3': ('127.0.0.1', 30010),
+    },
+    'HEALTH_THRESHOLD': 2,
     'BACKUP_CACHE_SECONDS': 10,
     'BACKUP_DIR': current_path + "/../backup",
     'BACKUP_FILENAME_FORMAT': current_path + "/../backup/_bc_",

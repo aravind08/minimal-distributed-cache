@@ -10,24 +10,6 @@ from libs.config import CONFIG
 logger = logging.getLogger(__name__)
 
 
-def conn_handler(conn, fn):
-    """
-    handle the client connection
-    """
-    try:
-        while True:
-            response = conn.recv(CONFIG['MAX_HEADER_SIZE'])
-            if not response:
-                continue
-            logger.info("response {}".format(response))
-            message_length = int(response.decode("utf-8"))
-            message = conn.recv(message_length)
-            response = fn(message)
-            send_message(response, conn)
-    except ConnectionResetError:
-        pass
-    logger.info("client disconnected {}".format(conn))
-
 def send_message(message, conn):
     """
     Format message before sending to the client
@@ -36,7 +18,6 @@ def send_message(message, conn):
     message_length = "{:<{}}".format(len(message), CONFIG['MAX_HEADER_SIZE'])
     # send header
     conn.send(bytes(message_length, "utf-8"))
-    logger.debug(message)
     # send data
     conn.send(message)
 
