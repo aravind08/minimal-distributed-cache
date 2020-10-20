@@ -1,6 +1,5 @@
-from gevent import monkey
-monkey.patch_all()
-from gevent import socket
+
+import socket
 import logging
 import threading
 import pickle
@@ -175,6 +174,5 @@ if __name__ == "__main__":
     # create backup directory
     utils.setup_dir()
     for name in CONFIG["SERVER_POOL"]:
-        if name != "n2":
-            host, port = CONFIG["SERVER_POOL"].get(name)
-            threading.Thread(target=Server, args=[name, host, port]).start()
+        host, port = CONFIG["SERVER_POOL"].get(name)
+        threading.Thread(target=Server, args=[name, host, port]).start()
